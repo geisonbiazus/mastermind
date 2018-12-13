@@ -38,4 +38,11 @@ defmodule MasterMind.CodeMakerTest do
   test "guesses with some position and some value matches" do
     assert CodeMaker.score([1, 2, 3, 4], [1, 2, 4, 3]) == [2, 2]
   end
+
+  test "duplicate guessed numbers are not counted unless they correspond to " <>
+         "the same number of duplications in the code" do
+    assert CodeMaker.score([1, 2, 3, 4], [3, 3, 3, 4]) == [2, 0]
+    assert CodeMaker.score([1, 1, 2, 3], [1, 2, 1, 2]) == [1, 2]
+    assert CodeMaker.score([3, 3, 3, 3], [3, 1, 1, 1]) == [1, 0]
+  end
 end
