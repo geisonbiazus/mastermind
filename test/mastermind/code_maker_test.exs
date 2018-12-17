@@ -44,5 +44,6 @@ defmodule MasterMind.CodeMakerTest do
     assert CodeMaker.score([1, 2, 3, 4], [3, 3, 3, 4]) == [2, 0]
     assert CodeMaker.score([1, 1, 2, 3], [1, 2, 1, 2]) == [1, 2]
     assert CodeMaker.score([3, 3, 3, 3], [3, 1, 1, 1]) == [1, 0]
+    assert CodeMaker.score([0, 0, 0, 1], [0, 0, 0, 0]) == [3, 0]
   end
 end

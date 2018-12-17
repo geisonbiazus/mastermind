@@ -3,7 +3,6 @@ defmodule MasterMind.CodeMaker do
     p = position_matches(code, guess)
     v = value_matches(code, guess)
     o = over_count(code, guess)
-
     [p, v - p - o]
   end
 
@@ -20,7 +19,7 @@ defmodule MasterMind.CodeMaker do
   end
 
   defp over_count(code, guess) do
-    code
+    MapSet.new(code)
     |> Stream.map(&(count_of(guess, &1) - count_of(code, &1)))
     |> Stream.filter(&(&1 >= 0))
     |> Enum.sum()

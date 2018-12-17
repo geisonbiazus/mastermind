@@ -1,6 +1,20 @@
 defmodule MasterMind.CodeBreaker do
-  def break_code(past_guesses) do
+  alias MasterMind.CodeMaker
+
+  def break_code(nil, []) do
     [0, 0, 0, 0]
+  end
+
+  def break_code(last_guess, past_guesses) do
+    loop_code(inc_guess(last_guess), hd(past_guesses))
+  end
+
+  defp loop_code(guess, [last_guess, last_result] = last_guess_result) do
+    if CodeMaker.score(guess, last_guess) == last_result do
+      guess
+    else
+      loop_code(inc_guess(guess), last_guess_result)
+    end
   end
 
   def inc_guess(guess) do
