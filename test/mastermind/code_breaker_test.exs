@@ -26,4 +26,13 @@ defmodule MasterMind.CodeBreakerTest do
     assert CodeBreaker.number_to_guess(259) == [1, 1, 1, 1]
     assert CodeBreaker.number_to_guess(6 * 6 * 6 * 6 - 1) == [5, 5, 5, 5]
   end
+
+  test "inc_guess" do
+    assert CodeBreaker.inc_guess([0, 0, 0, 0]) == [0, 0, 0, 1]
+    assert CodeBreaker.inc_guess([0, 0, 0, 5]) == [0, 0, 1, 0]
+    assert CodeBreaker.inc_guess([0, 0, 5, 5]) == [0, 1, 0, 0]
+    assert CodeBreaker.inc_guess([0, 5, 5, 4]) == [0, 5, 5, 5]
+    assert CodeBreaker.inc_guess([0, 5, 5, 5]) == [1, 0, 0, 0]
+    assert CodeBreaker.inc_guess([5, 5, 5, 5]) == [0, 0, 0, 0]
+  end
 end
