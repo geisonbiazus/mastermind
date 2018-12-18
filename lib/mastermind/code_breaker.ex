@@ -6,14 +6,18 @@ defmodule MasterMind.CodeBreaker do
   end
 
   def break_code(last_guess, past_guesses) do
-    loop_code(inc_guess(last_guess), hd(past_guesses))
+    next_guess(inc_guess(last_guess), past_guesses)
   end
 
-  defp loop_code(guess, [last_guess, last_result] = last_guess_result) do
-    if CodeMaker.score(guess, last_guess) == last_result do
+  defp next_guess([0, 0, 0, 0], _past_guesses), do: :error
+
+  defp next_guess(guess, past_guesses) do
+    if Enum.all?(past_guesses, fn [past_guess, past_result] ->
+         CodeMaker.score(guess, past_guess) == past_result
+       end) do
       guess
     else
-      loop_code(inc_guess(guess), last_guess_result)
+      next_guess(inc_guess(guess), past_guesses)
     end
   end
 
