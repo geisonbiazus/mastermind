@@ -34,25 +34,25 @@ defmodule MasterMind.CodeBreakerTest do
 
   describe "sequential strategy" do
     test "initial guess" do
-      assert CodeBreaker.break_code(nil, []) == [0, 0, 0, 0]
+      assert CodeBreaker.break_code_seq(nil, []) == [0, 0, 0, 0]
     end
 
     test "first step for code [1, 2, 3, 4]" do
       last_guess = [0, 0, 0, 0]
       past_guesses = [[[0, 0, 0, 0], [0, 0]]]
-      assert CodeBreaker.break_code(last_guess, past_guesses) == [1, 1, 1, 1]
+      assert CodeBreaker.break_code_seq(last_guess, past_guesses) == [1, 1, 1, 1]
     end
 
     test "first step for code [0, 0, 0, 1]" do
       last_guess = [0, 0, 0, 0]
       past_guesses = [[[0, 0, 0, 0], [3, 0]]]
-      assert CodeBreaker.break_code(last_guess, past_guesses) == [0, 0, 0, 1]
+      assert CodeBreaker.break_code_seq(last_guess, past_guesses) == [0, 0, 0, 1]
     end
 
     test "second step for code [0, 0, 1, 0]" do
       last_guess = [0, 0, 0, 1]
       past_guesses = [[[0, 0, 0, 1], [2, 2]]]
-      assert CodeBreaker.break_code(last_guess, past_guesses) == [0, 0, 1, 0]
+      assert CodeBreaker.break_code_seq(last_guess, past_guesses) == [0, 0, 1, 0]
     end
 
     test "two steps are required for [0, 0, 1, 0]" do
@@ -63,7 +63,7 @@ defmodule MasterMind.CodeBreakerTest do
         [[0, 0, 0, 1], [2, 2]]
       ]
 
-      assert CodeBreaker.break_code(last_guess, past_guesses) == [0, 0, 1, 0]
+      assert CodeBreaker.break_code_seq(last_guess, past_guesses) == [0, 0, 1, 0]
     end
   end
 

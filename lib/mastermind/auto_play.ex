@@ -8,7 +8,7 @@ defmodule MasterMind.AutoPlay do
   end
 
   defp auto_play(code, tries, past_scores, last_guess) do
-    guess = CodeBreaker.break_code(last_guess, past_scores)
+    guess = CodeBreaker.break_code_seq(last_guess, past_scores)
     score = CodeMaker.score(code, guess)
 
     if score == [4, 0] do

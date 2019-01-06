@@ -1,12 +1,21 @@
 defmodule MasterMind.CodeBreaker do
   alias MasterMind.CodeMaker
 
-  def break_code(nil, []) do
+  def break_code_seq(nil, []) do
     [0, 0, 0, 0]
   end
 
-  def break_code(last_guess, past_guesses) do
+  def break_code_seq(last_guess, past_guesses) do
     next_guess(inc_guess(last_guess), past_guesses)
+  end
+
+  def break_code_3x2(last_guess, past_guesses) do
+    case length(past_guesses) do
+      0 -> [0, 0, 1, 1]
+      1 -> [2, 2, 3, 3]
+      2 -> [4, 4, 5, 5]
+      _ -> next_guess(inc_guess(last_guess), past_guesses)
+    end
   end
 
   defp next_guess([0, 0, 0, 0], _past_guesses), do: :error
@@ -44,14 +53,5 @@ defmodule MasterMind.CodeBreaker do
 
   defp inc(n) do
     n + 1
-  end
-
-  def break_code_3x2(last_guess, past_guesses) do
-    case length(past_guesses) do
-      0 -> [0, 0, 1, 1]
-      1 -> [2, 2, 3, 3]
-      2 -> [4, 4, 5, 5]
-      _ -> next_guess(inc_guess(last_guess), past_guesses)
-    end
   end
 end
