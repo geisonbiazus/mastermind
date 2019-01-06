@@ -32,36 +32,86 @@ defmodule MasterMind.CodeBreakerTest do
     assert CodeBreaker.inc_guess([5, 5, 5, 5]) == [0, 0, 0, 0]
   end
 
-  test "initial guess" do
-    assert CodeBreaker.break_code(nil, []) == [0, 0, 0, 0]
+  describe "sequential strategy" do
+    test "initial guess" do
+      assert CodeBreaker.break_code(nil, []) == [0, 0, 0, 0]
+    end
+
+    test "first step for code [1, 2, 3, 4]" do
+      last_guess = [0, 0, 0, 0]
+      past_guesses = [[[0, 0, 0, 0], [0, 0]]]
+      assert CodeBreaker.break_code(last_guess, past_guesses) == [1, 1, 1, 1]
+    end
+
+    test "first step for code [0, 0, 0, 1]" do
+      last_guess = [0, 0, 0, 0]
+      past_guesses = [[[0, 0, 0, 0], [3, 0]]]
+      assert CodeBreaker.break_code(last_guess, past_guesses) == [0, 0, 0, 1]
+    end
+
+    test "second step for code [0, 0, 1, 0]" do
+      last_guess = [0, 0, 0, 1]
+      past_guesses = [[[0, 0, 0, 1], [2, 2]]]
+      assert CodeBreaker.break_code(last_guess, past_guesses) == [0, 0, 1, 0]
+    end
+
+    test "two steps are required for [0, 0, 1, 0]" do
+      last_guess = [0, 0, 0, 0]
+
+      past_guesses = [
+        [[0, 0, 0, 0], [3, 0]],
+        [[0, 0, 0, 1], [2, 2]]
+      ]
+
+      assert CodeBreaker.break_code(last_guess, past_guesses) == [0, 0, 1, 0]
+    end
   end
 
-  test "first step for code [1, 2, 3, 4]" do
-    last_guess = [0, 0, 0, 0]
-    past_guesses = [[[0, 0, 0, 0], [0, 0]]]
-    assert CodeBreaker.break_code(last_guess, past_guesses) == [1, 1, 1, 1]
-  end
+  describe "3x2 strategy" do
+    test "firt step is [0, 0, 1, 1]" do
+      assert CodeBreaker.break_code_3x2(nil, []) == [0, 0, 1, 1]
+    end
 
-  test "first step for code [0, 0, 0, 1]" do
-    last_guess = [0, 0, 0, 0]
-    past_guesses = [[[0, 0, 0, 0], [3, 0]]]
-    assert CodeBreaker.break_code(last_guess, past_guesses) == [0, 0, 0, 1]
-  end
+    test "second step is [2, 2, 3, 3]" do
+      last_guess = [0, 0, 1, 1]
+      past_guesses = [[[0, 0, 1, 1], [0, 0]]]
+      assert CodeBreaker.break_code_3x2(last_guess, past_guesses) == [2, 2, 3, 3]
+    end
 
-  test "second step for code [0, 0, 1, 0]" do
-    last_guess = [0, 0, 0, 1]
-    past_guesses = [[[0, 0, 0, 1], [2, 2]]]
-    assert CodeBreaker.break_code(last_guess, past_guesses) == [0, 0, 1, 0]
-  end
+    test "third step is [4, 4, 5, 5]" do
+      last_guess = [2, 2, 3, 3]
 
-  test "two steps are required for [0, 0, 1, 0]" do
-    last_guess = [0, 0, 0, 0]
+      past_guesses = [
+        [[0, 0, 1, 1], [0, 0]],
+        [[2, 2, 3, 3], [0, 0]]
+      ]
 
-    past_guesses = [
-      [[0, 0, 0, 0], [3, 0]],
-      [[0, 0, 0, 1], [2, 2]]
-    ]
+      assert CodeBreaker.break_code_3x2(last_guess, past_guesses) == [4, 4, 5, 5]
+    end
 
-    assert CodeBreaker.break_code(last_guess, past_guesses) == [0, 0, 1, 0]
+    test "fourth step falls back to sequential decoding" do
+      last_guess = [4, 4, 5, 5]
+
+      past_guesses = [
+        [[0, 0, 1, 1], [0, 0]],
+        [[2, 2, 3, 3], [0, 0]],
+        [[4, 4, 5, 5], [0, 4]]
+      ]
+
+      assert CodeBreaker.break_code_3x2(last_guess, past_guesses) == [5, 5, 4, 4]
+    end
+
+    test "fifth step continues the sequential decoding" do
+      last_guess = [4, 5, 4, 5]
+
+      past_guesses = [
+        [[0, 0, 1, 1], [0, 0]],
+        [[2, 2, 3, 3], [0, 0]],
+        [[4, 4, 5, 5], [2, 2]],
+        [[4, 5, 4, 5], [0, 4]]
+      ]
+
+      assert CodeBreaker.break_code_3x2(last_guess, past_guesses) == [5, 4, 5, 4]
+    end
   end
 end
