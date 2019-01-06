@@ -53,6 +53,6 @@ defmodule MasterMind.AutoPlay do
   end
 
   defp hist(x) do
-    Enum.map(Enum.chunk_by(x, & &1), &Enum.sum/1)
+    Enum.map(Enum.chunk_by(x, & &1), &Enum.count/1)
   end
 end

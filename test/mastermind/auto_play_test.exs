@@ -33,7 +33,7 @@ defmodule MasterMind.AutoPlayTest do
 
       assert AutoPlay.expected_turns(4, random_code) ==
                %{
-                 hist: [2, 5, 12],
+                 hist: [1, 1, 2],
                  max: 6,
                  mean: 4.75,
                  median: 6,
