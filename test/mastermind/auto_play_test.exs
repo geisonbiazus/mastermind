@@ -19,7 +19,27 @@ defmodule MasterMind.AutoPlayTest do
 
   describe "expected_turns" do
     test "plays the game many times and returns statistical results" do
-      AutoPlay.expected_turns(3)
+      {:ok, agent} =
+        Agent.start_link(fn ->
+          [[0, 5, 0, 3], [0, 2, 2, 1], [3, 5, 1, 0], [1, 1, 1, 1]]
+        end)
+
+      random_code = fn ->
+        Agent.get_and_update(agent, fn list ->
+          [head | tail] = list
+          {head, tail}
+        end)
+      end
+
+      assert AutoPlay.expected_turns(4, random_code) ==
+               %{
+                 hist: [2, 5, 12],
+                 max: 6,
+                 mean: 4.75,
+                 median: 6,
+                 min: 2,
+                 sigma: 1.8929694486000912
+               }
     end
   end
 end

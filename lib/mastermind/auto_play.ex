@@ -22,8 +22,10 @@ defmodule MasterMind.AutoPlay do
     CodeBreaker.number_to_guess(:rand.uniform(6 * 6 * 6 * 6 - 1))
   end
 
-  def expected_turns(n) do
-    scores = Enum.sort(Enum.map(1..n, fn _ -> play() end))
+  def expected_turns(n), do: expected_turns(n, &random_code/0)
+
+  def expected_turns(n, random_code_fn) do
+    scores = Enum.sort(Enum.map(1..n, fn _ -> play(random_code_fn) end))
 
     %{
       mean: mean(scores),
