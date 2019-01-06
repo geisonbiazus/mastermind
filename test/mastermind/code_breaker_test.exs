@@ -114,4 +114,52 @@ defmodule MasterMind.CodeBreakerTest do
       assert CodeBreaker.break_code_3x2(last_guess, past_guesses) == [5, 4, 5, 4]
     end
   end
+
+  describe "double rainbow strategy" do
+    test "firt step is [0, 1, 2, 3]" do
+      assert CodeBreaker.break_code_double_rainbow(nil, []) == [0, 1, 2, 3]
+    end
+
+    test "second step is [2, 3, 4, 5]" do
+      last_guess = [0, 1, 2, 3]
+      past_guesses = [[[0, 1, 2, 3], [0, 0]]]
+      assert CodeBreaker.break_code_double_rainbow(last_guess, past_guesses) == [2, 3, 4, 5]
+    end
+
+    test "third step is [4, 5, 0, 1]" do
+      last_guess = [2, 3, 4, 5]
+
+      past_guesses = [
+        [[0, 1, 2, 3], [0, 0]],
+        [[2, 3, 4, 5], [0, 0]]
+      ]
+
+      assert CodeBreaker.break_code_double_rainbow(last_guess, past_guesses) == [4, 5, 0, 1]
+    end
+
+    test "fourth step falls back to sequential decoding" do
+      last_guess = [4, 5, 0, 1]
+
+      past_guesses = [
+        [[0, 1, 2, 3], [1, 2]],
+        [[2, 3, 4, 5], [1, 2]],
+        [[4, 5, 0, 1], [2, 0]]
+      ]
+
+      assert CodeBreaker.break_code_double_rainbow(last_guess, past_guesses) == [2, 5, 0, 3]
+    end
+
+    test "fifth step continues the sequential decoding" do
+      last_guess = [2, 5, 0, 3]
+
+      past_guesses = [
+        [[0, 1, 2, 3], [1, 2]],
+        [[2, 3, 4, 5], [1, 2]],
+        [[4, 5, 0, 1], [2, 0]],
+        [[2, 5, 0, 3], [0, 2]]
+      ]
+
+      assert CodeBreaker.break_code_double_rainbow(last_guess, past_guesses) == [4, 3, 2, 1]
+    end
+  end
 end

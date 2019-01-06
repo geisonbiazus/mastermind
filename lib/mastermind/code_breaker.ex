@@ -14,6 +14,17 @@ defmodule MasterMind.CodeBreaker do
       0 -> [0, 0, 1, 1]
       1 -> [2, 2, 3, 3]
       2 -> [4, 4, 5, 5]
+      3 -> next_guess(inc_guess([0, 0, 0, 0]), past_guesses)
+      _ -> next_guess(inc_guess(last_guess), past_guesses)
+    end
+  end
+
+  def break_code_double_rainbow(last_guess, past_guesses) do
+    case length(past_guesses) do
+      0 -> [0, 1, 2, 3]
+      1 -> [2, 3, 4, 5]
+      2 -> [4, 5, 0, 1]
+      3 -> next_guess(inc_guess([0, 0, 0, 0]), past_guesses)
       _ -> next_guess(inc_guess(last_guess), past_guesses)
     end
   end
