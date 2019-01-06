@@ -1,8 +1,10 @@
 defmodule MasterMind.AutoPlay do
-  alias MasterMind.{CodeBreaker, CodeMaker, CodeRandomizer}
+  alias MasterMind.{CodeBreaker, CodeMaker}
 
-  def play do
-    auto_play(CodeRandomizer.random_code(), 1, [], nil)
+  def play, do: play(&random_code/0)
+
+  def play(random_code_fn) do
+    auto_play(random_code_fn.(), 1, [], nil)
   end
 
   defp auto_play(code, tries, past_scores, last_guess) do
@@ -14,6 +16,10 @@ defmodule MasterMind.AutoPlay do
     else
       auto_play(code, tries + 1, [[guess, score] | past_scores], guess)
     end
+  end
+
+  defp random_code do
+    CodeBreaker.number_to_guess(:rand.uniform(6 * 6 * 6 * 6 - 1))
   end
 
   def expected_turns(n) do
@@ -46,13 +52,5 @@ defmodule MasterMind.AutoPlay do
 
   defp hist(x) do
     Enum.map(Enum.chunk_by(x, & &1), &Enum.sum/1)
-  end
-end
-
-defmodule MasterMind.CodeRandomizer do
-  alias MasterMind.CodeBreaker
-
-  def random_code do
-    CodeBreaker.number_to_guess(:rand.uniform(6 * 6 * 6 * 6 - 1))
   end
 end

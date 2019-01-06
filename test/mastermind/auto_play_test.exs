@@ -1,27 +1,25 @@
 defmodule MasterMind.AutoPlayTest do
   use ExUnit.Case
 
-  import Mock
-
-  alias MasterMind.{AutoPlay, CodeRandomizer}
+  alias MasterMind.AutoPlay
 
   describe "play" do
     test "returns 1 if initial guess is correct" do
-      with_mock(CodeRandomizer, random_code: fn -> [0, 0, 0, 0] end) do
-        assert AutoPlay.play() == 1
-      end
+      assert AutoPlay.play(fn -> [0, 0, 0, 0] end) == 1
     end
 
     test "takes two tries if code is [0 0 0 1]" do
-      with_mock(CodeRandomizer, random_code: fn -> [0, 0, 0, 1] end) do
-        assert AutoPlay.play() == 2
-      end
+      assert AutoPlay.play(fn -> [0, 0, 0, 1] end) == 2
     end
 
     test "takes three tries if code is [0 0 1 0]" do
-      with_mock(CodeRandomizer, random_code: fn -> [0, 0, 1, 0] end) do
-        assert AutoPlay.play() == 3
-      end
+      assert AutoPlay.play(fn -> [0, 0, 1, 0] end) == 3
+    end
+  end
+
+  describe "expected_turns" do
+    test "plays the game many times and returns statistical results" do
+      AutoPlay.expected_turns(3)
     end
   end
 end
