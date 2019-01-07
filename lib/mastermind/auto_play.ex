@@ -1,6 +1,8 @@
 defmodule MasterMind.AutoPlay do
   alias MasterMind.{CodeBreaker, CodeMaker}
 
+  def analyze_strategies(n), do: analyze_strategies(n, &random_code/0)
+
   def analyze_strategies(n, random_code_fn) do
     %{
       seq: analyze_strategy(&CodeBreaker.break_code_seq/2, n, random_code_fn),
