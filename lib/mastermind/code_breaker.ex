@@ -14,8 +14,8 @@ defmodule MasterMind.CodeBreaker do
       0 -> [0, 0, 1, 1]
       1 -> [2, 2, 3, 3]
       2 -> [4, 4, 5, 5]
-      3 -> next_guess(inc_guess([0, 0, 0, 0]), past_guesses)
-      _ -> next_guess(inc_guess(last_guess), past_guesses)
+      3 -> next_guess([0, 0, 0, 0], past_guesses)
+      _ -> next_guess(last_guess, past_guesses)
     end
   end
 
@@ -24,21 +24,25 @@ defmodule MasterMind.CodeBreaker do
       0 -> [0, 1, 2, 3]
       1 -> [2, 3, 4, 5]
       2 -> [4, 5, 0, 1]
-      3 -> next_guess(inc_guess([0, 0, 0, 0]), past_guesses)
-      _ -> next_guess(inc_guess(last_guess), past_guesses)
+      3 -> next_guess([0, 0, 0, 0], past_guesses)
+      _ -> next_guess(last_guess, past_guesses)
     end
   end
 
-  defp next_guess([0, 0, 0, 0], _past_guesses), do: :error
+  defp next_guess(:overflow, _past_guesses), do: :error
 
   defp next_guess(guess, past_guesses) do
-    if Enum.all?(past_guesses, fn [past_guess, past_result] ->
-         CodeMaker.score(guess, past_guess) == past_result
-       end) do
+    if guess_consistent_with_past_guesses(guess, past_guesses) do
       guess
     else
       next_guess(inc_guess(guess), past_guesses)
     end
+  end
+
+  defp guess_consistent_with_past_guesses(guess, past_guesses) do
+    Enum.all?(past_guesses, fn [past_guess, past_result] ->
+      CodeMaker.score(guess, past_guess) == past_result
+    end)
   end
 
   def inc_guess(guess) do
@@ -46,6 +50,7 @@ defmodule MasterMind.CodeBreaker do
     |> guess_to_number
     |> inc
     |> number_to_guess
+    |> check_overflow
   end
 
   def guess_to_number(guess) do
@@ -65,4 +70,7 @@ defmodule MasterMind.CodeBreaker do
   defp inc(n) do
     n + 1
   end
+
+  defp check_overflow([0, 0, 0, 0]), do: :overflow
+  defp check_overflow(guess), do: guess
 end

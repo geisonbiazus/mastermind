@@ -29,7 +29,7 @@ defmodule MasterMind.CodeBreakerTest do
     assert CodeBreaker.inc_guess([0, 0, 5, 5]) == [0, 1, 0, 0]
     assert CodeBreaker.inc_guess([0, 5, 5, 4]) == [0, 5, 5, 5]
     assert CodeBreaker.inc_guess([0, 5, 5, 5]) == [1, 0, 0, 0]
-    assert CodeBreaker.inc_guess([5, 5, 5, 5]) == [0, 0, 0, 0]
+    assert CodeBreaker.inc_guess([5, 5, 5, 5]) == :overflow
   end
 
   describe "sequential strategy" do
